@@ -6,5 +6,5 @@ Tech & gaming enthusiast | Modding | Audio production | Fullstack |
 TypeScript | JS | Python | Audio tools | Emulators | Java | C# | HTML | React 
 
 #### Contact
-[![Discord](https://img.shields.io/badge/Discord-Contact-blue?logo=discord&logoColor=white)]([https://discord.com/users/1208777602840400044])
+[![Discord](https://img.shields.io/badge/Discord-Contact-blue?logo=discord&logoColor=white)]([https://discord.gg/AsMJ3DqW])
 
