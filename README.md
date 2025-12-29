@@ -1,4 +1,4 @@
-# Hi there, I'm [intity4596] 
+# Hi there, I'm [intity01] 
 
 ### Aspiring Software Engineer | Problem Solver
 
@@ -41,5 +41,5 @@ Currently looking for an **Internship opportunity (Summer 2026)** to apply my sk
 ### Connect with Me
 
 [![Email](https://img.shields.io/badge/Email-Contact_Me-red?style=flat&logo=gmail&logoColor=white)](mailto:aoom5961@gmail.com)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/your-profile)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/naphatsadon-prasakha-855808364?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app)
 [![Discord](https://img.shields.io/badge/Discord-Chat-7289DA?style=flat&logo=discord&logoColor=white)](https://discord.gg/your_link)
