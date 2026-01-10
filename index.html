@@ -41,10 +41,9 @@
             background-color: #050505;
             color: #e2e2e2;
             cursor: default;
-            /* Prevent text selection */
-            -webkit-user-select: none; /* Safari */
-            -ms-user-select: none; /* IE 10 and IE 11 */
-            user-select: none; /* Standard syntax */
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
         #spotlight {
@@ -66,12 +65,6 @@
             -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
         }
 
-        .glass-panel {
-            background: rgba(20, 20, 20, 0.4);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
         .status-bar {
             background: rgba(10, 10, 10, 0.85);
             backdrop-filter: blur(20px);
@@ -87,7 +80,6 @@
             transition: background 0.2s;
             cursor: pointer;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
         }
 
         .status-item:hover {
@@ -100,8 +92,13 @@
             color: white;
         }
 
-        ::-webkit-scrollbar {
-            width: 0px;
+        /* Hide scrollbar for generic browsers */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
         }
     </style>
 </head>
@@ -110,14 +107,12 @@
     <div id="spotlight"></div>
     <div class="fixed inset-0 bg-grid z-0 pointer-events-none"></div>
 
-    <!-- Top Left Identity -->
     <div class="fixed top-6 left-6 z-50 mix-blend-difference">
         <a href="#" class="font-mono font-bold text-sm tracking-widest text-white opacity-80 hover:opacity-100 transition">
             // NAPHATSADON_CV
         </a>
     </div>
 
-    <!-- Top Right Socials -->
     <div class="fixed top-6 right-6 z-50 flex gap-4">
         <a href="https://github.com/intity01" target="_blank" class="text-secondary hover:text-white transition transform hover:scale-110">
             <i class="fab fa-github text-xl"></i>
@@ -129,20 +124,19 @@
 
     <main class="relative z-10 pb-20">
         
-        <!-- Hero Section -->
-        <section id="home" class="min-h-screen flex flex-col justify-center items-center text-center px-6 pt-10">
+        <section id="home" class="min-h-screen flex flex-col justify-center items-center text-center px-4 pt-24 md:pt-10">
             
             <div class="font-mono text-xs text-secondary mb-6 animate-fade-in opacity-0" style="animation-delay: 0.2s;">
                 <span class="text-success">●</span> SYSTEM ONLINE
             </div>
 
-            <h1 class="text-5xl md:text-8xl font-bold tracking-tighter mb-8 animate-fade-in opacity-0" style="animation-delay: 0.4s;">
+            <h1 class="text-4xl md:text-6xl lg:text-8xl font-bold tracking-tighter mb-8 animate-fade-in opacity-0" style="animation-delay: 0.4s;">
                 SOFTWARE <span class="text-secondary opacity-50">ENGINEER</span><br>
                 <span class="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-600">MULTIDISCIPLINARY.</span>
             </h1>
 
             <div class="max-w-xl text-secondary text-sm md:text-base leading-relaxed mb-12 animate-fade-in opacity-0" style="animation-delay: 0.6s;">
-                <p class="font-mono border-l-2 border-white/20 pl-4 text-left">
+                <p class="font-mono border-l-2 border-white/20 pl-4 text-left mx-auto md:mx-0">
                     > Initializing user: <strong class="text-white">Naphatsadon Prasakha</strong><br>
                     > Role: <span class="text-white">Game Tester</span> & <span class="text-white">Full Stack Dev</span><br>
                     > Location: <span class="text-white">Bangkok, Thailand</span><br>
@@ -150,19 +144,17 @@
                 </p>
             </div>
 
-            <!-- Buttons -->
-            <div class="flex flex-col md:flex-row gap-4 animate-fade-in opacity-0" style="animation-delay: 0.8s;">
-                <a href="#projects" class="px-8 py-4 bg-white text-black font-mono text-xs font-bold uppercase tracking-widest hover:scale-105 transition transform">
+            <div class="flex flex-col w-full md:w-auto md:flex-row gap-4 animate-fade-in opacity-0" style="animation-delay: 0.8s;">
+                <a href="#projects" class="px-8 py-4 bg-white text-black font-mono text-xs font-bold uppercase tracking-widest hover:scale-105 transition transform text-center">
                     View_Projects
                 </a>
-                <a href="./CV-NAPHATSADON.pdf" class="px-8 py-4 border border-white/20 text-white font-mono text-xs font-bold uppercase tracking-widest hover:bg-white/10 transition transform flex items-center justify-center gap-2">
+                <a href="./CV-NAPHATSADON.pdf" target="_blank" class="px-8 py-4 border border-white/20 text-white font-mono text-xs font-bold uppercase tracking-widest hover:bg-white/10 transition transform flex items-center justify-center gap-2">
                     <i class="fas fa-download"></i> Download_CV
                 </a>
             </div>
 
         </section>
 
-        <!-- Projects Section -->
         <section id="projects" class="py-20 max-w-6xl mx-auto px-6">
             <div class="flex items-end justify-between mb-16 border-b border-white/10 pb-4">
                 <h2 class="text-3xl font-bold flex items-center gap-3">
@@ -171,24 +163,22 @@
                 <span class="font-mono text-xs text-secondary hidden md:block">Based on CV</span>
             </div>
 
-            <!-- Grid Layout 2x2 -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
                 
-                <!-- Project Card 1: SakuDoko -->
-                <a href="https://apps.microsoft.com/detail/9nb7fhv3xlhw?hl=en-us&gl=TH" target="_blank" class="group relative bg-white/5 border border-white/5 hover:border-white/30 transition duration-500 h-[380px] overflow-hidden block">
+                <a href="https://apps.microsoft.com/detail/9nb7fhv3xlhw?hl=en-us&gl=TH" target="_blank" class="group relative bg-white/5 border border-white/5 hover:border-white/30 transition duration-500 min-h-[380px] h-auto overflow-hidden block">
                     <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/90 z-10"></div>
                     <div class="absolute inset-0 bg-gray-900 group-hover:scale-105 transition duration-700 flex items-center justify-center">
                         <i class="fas fa-stopwatch text-6xl text-white/5 group-hover:text-white/20 transition duration-500"></i>
                     </div>
                     
                     <div class="relative z-20 h-full flex flex-col justify-between p-6">
-                        <div class="flex justify-between items-start">
+                        <div class="flex justify-between items-start mb-4">
                             <span class="font-mono text-xs text-white/50">DESKTOP_APP</span>
                             <i class="fas fa-external-link-alt text-white/50 group-hover:text-white transition"></i>
                         </div>
                         <div>
                             <h3 class="text-2xl font-bold mb-2 group-hover:translate-x-2 transition duration-300">SakuDoko</h3>
-                            <p class="text-sm text-gray-400 mb-4 line-clamp-2">Productivity app with macOS-like UI. Features Pomodoro timer and task management.</p>
+                            <p class="text-sm text-gray-400 mb-4">Productivity app with macOS-like UI. Features Pomodoro timer and task management.</p>
                             <div class="flex flex-wrap gap-2">
                                 <span class="px-2 py-1 border border-white/10 text-[10px] font-mono uppercase text-gray-400">React</span>
                                 <span class="px-2 py-1 border border-white/10 text-[10px] font-mono uppercase text-gray-400">Electron</span>
@@ -198,22 +188,21 @@
                     </div>
                 </a>
 
-                <!-- Project Card 2: Discord Music Bot -->
-                <a href="https://sakudoko-bot.fly.dev/" target="_blank" class="group relative bg-white/5 border border-white/5 hover:border-white/30 transition duration-500 h-[380px] overflow-hidden block">
+                <a href="https://sakudoko-bot.fly.dev/" target="_blank" class="group relative bg-white/5 border border-white/5 hover:border-white/30 transition duration-500 min-h-[380px] h-auto overflow-hidden block">
                     <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/90 z-10"></div>
                     <div class="absolute inset-0 bg-gray-900 group-hover:scale-105 transition duration-700 flex items-center justify-center">
                         <i class="fas fa-music text-6xl text-white/5 group-hover:text-white/20 transition duration-500"></i>
                     </div>
                     
                     <div class="relative z-20 h-full flex flex-col justify-between p-6">
-                        <div class="flex justify-between items-start">
+                        <div class="flex justify-between items-start mb-4">
                             <span class="font-mono text-xs text-white/50">BACKEND_AUDIO</span>
                             <i class="fas fa-external-link-alt text-white/50 group-hover:text-white transition"></i>
                         </div>
                         <div>
                             <h3 class="text-2xl font-bold mb-2 group-hover:translate-x-2 transition duration-300">Discord Music Bot</h3>
-                            <p class="text-sm text-gray-400 mb-4 line-clamp-2">High-performance bot serving 500+ users. Integrated Spotify/YouTube APIs with audio filtering.</p>
-                            <div class="flex gap-2">
+                            <p class="text-sm text-gray-400 mb-4">High-performance bot serving 500+ users. Integrated Spotify/YouTube APIs with audio filtering.</p>
+                            <div class="flex gap-2 flex-wrap">
                                 <span class="px-2 py-1 border border-white/10 text-[10px] font-mono uppercase text-gray-400">Node.js</span>
                                 <span class="px-2 py-1 border border-white/10 text-[10px] font-mono uppercase text-gray-400">API</span>
                                 <span class="px-2 py-1 border border-white/10 text-[10px] font-mono uppercase text-gray-400">Sound Eng.</span>
@@ -222,21 +211,20 @@
                     </div>
                 </a>
 
-                <!-- Project Card 3: Anonymous Chat -->
-                <a href="https://chacole-92yzshx40-intity01s-projects.vercel.app/" target="_blank" class="group relative bg-white/5 border border-white/5 hover:border-white/30 transition duration-500 h-[380px] overflow-hidden block">
+                <a href="https://chacole-92yzshx40-intity01s-projects.vercel.app/" target="_blank" class="group relative bg-white/5 border border-white/5 hover:border-white/30 transition duration-500 min-h-[380px] h-auto overflow-hidden block">
                     <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/90 z-10"></div>
                     <div class="absolute inset-0 bg-gray-900 group-hover:scale-105 transition duration-700 flex items-center justify-center">
                         <i class="fas fa-comments text-6xl text-white/5 group-hover:text-white/20 transition duration-500"></i>
                     </div>
                     
                     <div class="relative z-20 h-full flex flex-col justify-between p-6">
-                        <div class="flex justify-between items-start">
+                        <div class="flex justify-between items-start mb-4">
                             <span class="font-mono text-xs text-white/50">REALTIME_SYS</span>
                             <i class="fas fa-external-link-alt text-white/50 group-hover:text-white transition"></i>
                         </div>
                         <div>
                             <h3 class="text-2xl font-bold mb-2 group-hover:translate-x-2 transition duration-300">Anonymous Chat</h3>
-                            <p class="text-sm text-gray-400 mb-4 line-clamp-2">Privacy-first real-time chat platform. Containerized for seamless deployment.</p>
+                            <p class="text-sm text-gray-400 mb-4">Privacy-first real-time chat platform. Containerized for seamless deployment.</p>
                             <div class="flex flex-wrap gap-2">
                                 <span class="px-2 py-1 border border-white/10 text-[10px] font-mono uppercase text-gray-400">FastAPI</span>
                                 <span class="px-2 py-1 border border-white/10 text-[10px] font-mono uppercase text-gray-400">WebSocket</span>
@@ -246,21 +234,20 @@
                     </div>
                 </a>
 
-                <!-- Project Card 4: MediaFlow -->
-                <a href="https://github.com/intity01/MediaFlow" target="_blank" class="group relative bg-white/5 border border-white/5 hover:border-white/30 transition duration-500 h-[380px] overflow-hidden block">
+                <a href="https://github.com/intity01/MediaFlow" target="_blank" class="group relative bg-white/5 border border-white/5 hover:border-white/30 transition duration-500 min-h-[380px] h-auto overflow-hidden block">
                     <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/90 z-10"></div>
                     <div class="absolute inset-0 bg-gray-900 group-hover:scale-105 transition duration-700 flex items-center justify-center">
                         <i class="fas fa-layer-group text-6xl text-white/5 group-hover:text-white/20 transition duration-500"></i>
                     </div>
                     
                     <div class="relative z-20 h-full flex flex-col justify-between p-6">
-                        <div class="flex justify-between items-start">
+                        <div class="flex justify-between items-start mb-4">
                             <span class="font-mono text-xs text-white/50">OPEN_SOURCE</span>
                             <i class="fas fa-external-link-alt text-white/50 group-hover:text-white transition"></i>
                         </div>
                         <div>
                             <h3 class="text-2xl font-bold mb-2 group-hover:translate-x-2 transition duration-300">MediaFlow</h3>
-                            <p class="text-sm text-gray-400 mb-4 line-clamp-2">Local media toolkit with AI stem separation, media downloading, and audio processing.</p>
+                            <p class="text-sm text-gray-400 mb-4">Local media toolkit with AI stem separation, media downloading, and audio processing.</p>
                             <div class="flex flex-wrap gap-2">
                                 <span class="px-2 py-1 border border-white/10 text-[10px] font-mono uppercase text-gray-400">Tauri 2</span>
                                 <span class="px-2 py-1 border border-white/10 text-[10px] font-mono uppercase text-gray-400">React</span>
@@ -273,7 +260,6 @@
             </div>
         </section>
 
-        <!-- Capabilities / Skills Modules -->
         <section id="modules" class="py-20 max-w-6xl mx-auto px-6 border-b border-white/10">
             <div class="flex items-end justify-between mb-8">
                 <h2 class="text-3xl font-bold flex items-center gap-3">
@@ -283,7 +269,6 @@
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Module 1: Languages -->
                 <div class="bg-white/5 p-6 border border-white/5 hover:bg-white/10 transition duration-300">
                     <i class="fas fa-code text-2xl text-white mb-4"></i>
                     <h3 class="font-mono text-xs text-secondary mb-1">LANGUAGES</h3>
@@ -295,7 +280,6 @@
                     </ul>
                 </div>
 
-                <!-- Module 2: Frontend -->
                 <div class="bg-white/5 p-6 border border-white/5 hover:bg-white/10 transition duration-300">
                     <i class="fas fa-desktop text-2xl text-white mb-4"></i>
                     <h3 class="font-mono text-xs text-secondary mb-1">INTERFACE</h3>
@@ -307,7 +291,6 @@
                     </ul>
                 </div>
 
-                 <!-- Module 3: Tools -->
                  <div class="bg-white/5 p-6 border border-white/5 hover:bg-white/10 transition duration-300">
                     <i class="fas fa-tools text-2xl text-white mb-4"></i>
                     <h3 class="font-mono text-xs text-secondary mb-1">DEVOPS</h3>
@@ -319,7 +302,6 @@
                     </ul>
                 </div>
 
-                <!-- Module 4: Unique -->
                 <div class="bg-white/5 p-6 border border-white/5 hover:border-white/40 hover:bg-white/10 transition duration-300 relative overflow-hidden">
                     <div class="absolute top-0 right-0 p-1 bg-white text-black text-[10px] font-bold font-mono">SPECIAL</div>
                     <i class="fas fa-wave-square text-2xl text-white mb-4"></i>
@@ -334,7 +316,6 @@
             </div>
         </section>
 
-        <!-- Certificates Section -->
         <section id="certificates" class="py-20 max-w-6xl mx-auto px-6 border-b border-white/10">
             <div class="flex items-end justify-between mb-8">
                 <h2 class="text-3xl font-bold flex items-center gap-3">
@@ -344,7 +325,6 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Cert 1 -->
                 <div class="bg-white/5 p-6 border border-white/5 flex items-start gap-4 hover:bg-white/10 transition">
                     <div class="w-12 h-12 bg-blue-500/20 rounded flex items-center justify-center text-blue-400 shrink-0">
                         <i class="fab fa-google text-2xl"></i>
@@ -356,7 +336,6 @@
                     </div>
                 </div>
 
-                <!-- Cert 2 -->
                 <div class="bg-white/5 p-6 border border-white/5 flex items-start gap-4 hover:bg-white/10 transition">
                     <div class="w-12 h-12 bg-red-500/20 rounded flex items-center justify-center text-red-400 shrink-0">
                         <i class="fas fa-flag text-2xl"></i>
@@ -368,7 +347,6 @@
                     </div>
                 </div>
 
-                <!-- Cert 3 -->
                 <div class="bg-white/5 p-6 border border-white/5 flex items-start gap-4 hover:bg-white/10 transition">
                     <div class="w-12 h-12 bg-green-500/20 rounded flex items-center justify-center text-green-400 shrink-0">
                         <i class="fas fa-shield-halved text-2xl"></i>
@@ -382,8 +360,7 @@
             </div>
         </section>
 
-        <!-- Journey Section -->
-        <section id="journey" class="py-20 max-w-4xl mx-auto px-6">
+        <section id="journey" class="py-20 max-w-4xl mx-auto px-4 md:px-6">
             <div class="flex items-end justify-between mb-16 border-b border-white/10 pb-4">
                 <h2 class="text-3xl font-bold flex items-center gap-3">
                     <span class="text-xs font-mono text-secondary">04.</span> Experience Log
@@ -391,9 +368,8 @@
                 <span class="font-mono text-xs text-secondary hidden md:block">Timeline</span>
             </div>
             
-            <div class="space-y-0 border-l border-white/10 ml-2">
+            <div class="space-y-0 border-l border-white/10 ml-0 md:ml-2">
                 
-                <!-- Experience 1 -->
                 <div class="pl-8 pb-12 relative group">
                     <div class="absolute left-[-5px] top-2 w-2.5 h-2.5 bg-white rounded-full group-hover:scale-150 transition"></div>
                     <span class="font-mono text-xs text-secondary mb-1 block">Jan 2025 - Present</span>
@@ -401,7 +377,6 @@
                     <p class="text-sm text-gray-400 mt-2">Executed functional testing and reported bugs using JIRA to ensure game stability. Collaborated with dev teams.</p>
                 </div>
 
-                <!-- Experience 2 -->
                 <div class="pl-8 pb-12 relative group">
                     <div class="absolute left-[-5px] top-2 w-2.5 h-2.5 bg-gray-600 rounded-full group-hover:bg-white transition"></div>
                     <span class="font-mono text-xs text-secondary mb-1 block">Mar 2025 - May 2025</span>
@@ -409,7 +384,6 @@
                     <p class="text-sm text-gray-400 mt-2">Provided technical support, troubleshooting hardware/software, and assisted in network configuration.</p>
                 </div>
 
-                <!-- Experience 3 -->
                 <div class="pl-8 pb-12 relative group">
                     <div class="absolute left-[-5px] top-2 w-2.5 h-2.5 bg-gray-600 rounded-full group-hover:bg-white transition"></div>
                     <span class="font-mono text-xs text-secondary mb-1 block">Short-term Project</span>
@@ -417,7 +391,6 @@
                     <p class="text-sm text-gray-400 mt-2">Assisted with data entry and administrative tasks for project support.</p>
                 </div>
 
-                <!-- Education -->
                 <div class="pl-8 relative group">
                     <div class="absolute left-[-5px] top-2 w-2.5 h-2.5 bg-gray-600 rounded-full group-hover:bg-white transition"></div>
                     <span class="font-mono text-xs text-secondary mb-1 block">Expected 2028</span>
@@ -427,7 +400,6 @@
             </div>
         </section>
 
-        <!-- Footer -->
         <section class="py-12 text-center border-t border-white/5 mt-10">
             <p class="text-gray-500 text-sm font-mono mb-4">aoom5961@gmail.com | +66 64-963-6875</p>
             <p class="text-gray-600 text-xs">SYSTEM_ID: NAPHATSADON // END_OF_LINE</p>
@@ -435,38 +407,36 @@
 
     </main>
 
-    <!-- SYSTEM STATUS BAR -->
-    <div class="fixed bottom-0 w-full h-10 status-bar z-50 flex justify-between items-center text-secondary select-none">
+    <div class="fixed bottom-0 w-full h-12 md:h-10 status-bar z-50 flex justify-between items-center text-secondary select-none text-[10px] md:text-xs">
         
-        <!-- Left -->
-        <div class="flex h-full">
+        <div class="hidden md:flex h-full">
             <div class="status-item bg-blue-600/20 text-blue-400 hover:bg-blue-600/30">
                 <i class="fas fa-code-branch mr-2"></i> main*
             </div>
-            <div class="status-item border-r border-white/10 hidden md:flex">
+            <div class="status-item border-r border-white/10">
                 <i class="far fa-circle-xmark mr-2 text-green-400"></i> All Systems Go
             </div>
         </div>
 
-        <!-- Center -->
-        <div class="flex h-full">
-            <a href="#home" class="status-item hover:text-white transition-colors" id="nav-home">HOME</a>
-            <a href="#projects" class="status-item hover:text-white transition-colors" id="nav-projects">PROJECTS</a>
-            <a href="#modules" class="status-item hover:text-white transition-colors" id="nav-modules">SKILLS</a>
-            <a href="#certificates" class="status-item hover:text-white transition-colors" id="nav-certificates">CERTS</a>
-            <a href="#journey" class="status-item hover:text-white transition-colors" id="nav-journey">LOG</a>
-            <a href="mailto:aoom5961@gmail.com" class="status-item hover:text-white transition-colors text-white font-bold bg-white/5">CONTACT</a>
+        <div class="flex h-full w-full md:w-auto overflow-x-auto no-scrollbar md:overflow-visible">
+            <div class="flex min-w-full md:min-w-0 px-2 md:px-0">
+                <a href="#home" class="status-item hover:text-white transition-colors whitespace-nowrap" id="nav-home">HOME</a>
+                <a href="#projects" class="status-item hover:text-white transition-colors whitespace-nowrap" id="nav-projects">PROJECTS</a>
+                <a href="#modules" class="status-item hover:text-white transition-colors whitespace-nowrap" id="nav-modules">SKILLS</a>
+                <a href="#certificates" class="status-item hover:text-white transition-colors whitespace-nowrap" id="nav-certificates">CERTS</a>
+                <a href="#journey" class="status-item hover:text-white transition-colors whitespace-nowrap" id="nav-journey">LOG</a>
+                <a href="mailto:aoom5961@gmail.com" class="status-item hover:text-white transition-colors text-white font-bold bg-white/5 whitespace-nowrap sticky right-0">CONTACT</a>
+            </div>
         </div>
 
-        <!-- Right -->
-        <div class="flex h-full">
-            <div class="status-item border-l border-white/10 hidden md:flex" id="clock">
+        <div class="hidden md:flex h-full">
+            <div class="status-item border-l border-white/10" id="clock">
                 --:--:--
             </div>
-            <div class="status-item bg-white/10 text-white hover:bg-white/20 hidden md:flex">
+            <div class="status-item bg-white/10 text-white hover:bg-white/20">
                 <span id="scroll-percent">Ln 1, Col 1</span>
             </div>
-            <div class="status-item bg-accent text-black hover:bg-white font-bold hidden md:flex">
+            <div class="status-item bg-accent text-black hover:bg-white font-bold">
                 UTF-8
             </div>
         </div>
