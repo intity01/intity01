@@ -1,42 +1,44 @@
-# Hi there, I'm [intity01] 
+<img src="https://via.placeholder.com/1500x300/1a1b26/ffffff?text=Naphatsadon+Prasakha+(intity01)" alt="Banner" width="100%">
 
-### Aspiring Software Engineer | Problem Solver
+<br/>
 
-I am a 3rd-year student with a passion for building software that solves real-world problems. I enjoy exploring deep technical challenges, from web development to desktop application architecture and system modifications.
+<h1>
+  <a href="https://git.io/typing-svg">
+    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=28&pause=1000&color=3178C6&center=false&vCenter=true&width=500&lines=Hi+there,+I'm+Naphatsadon+;Aspiring+Software+Engineer;UI%2FUX+%26+Systems+Enthusiast" alt="Typing SVG" />
+  </a>
+</h1>
 
-Currently looking for an **Internship opportunity (Summer 2026)** to apply my skills in full-stack development and system engineering.
+**Front-End & System Developer | Passionate about UI/UX, macOS Aesthetics & Modern Web**
 
----
-
-### Tech Stack
-
-| Category | Technologies |
-| --- | --- |
-| **Languages** | ![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?style=flat&logo=typescript&logoColor=white) ![C#](https://img.shields.io/badge/-C%23-239120?style=flat&logo=c-sharp&logoColor=white) ![Java](https://img.shields.io/badge/-Java-007396?style=flat&logo=java&logoColor=white) ![Python](https://img.shields.io/badge/-Python-3776AB?style=flat&logo=python&logoColor=white) |
-| **Frontend** | ![React](https://img.shields.io/badge/-React-61DAFB?style=flat&logo=react&logoColor=black) ![Next.js](https://img.shields.io/badge/-Next.js-000000?style=flat&logo=next.js&logoColor=white) ![HTML5](https://img.shields.io/badge/-HTML5-E34F26?style=flat&logo=html5&logoColor=white) |
-| **Desktop/Mobile** | ![.NET](https://img.shields.io/badge/-.NET_MAUI-512BD4?style=flat&logo=dotnet&logoColor=white) ![Electron](https://img.shields.io/badge/-Electron-47848F?style=flat&logo=electron&logoColor=white) |
-| **Tools & Others** | ![Git](https://img.shields.io/badge/-Git-F05032?style=flat&logo=git&logoColor=white) ![VS Code](https://img.shields.io/badge/-VS_Code-007ACC?style=flat&logo=visual-studio-code&logoColor=white) • Audio Production • Game Modding |
+*  Based in Bangkok, Thailand
+* 3rd-year BSc student at Thai-Nichi Institute of Technology
+* Currently building **MySTACY** (macOS-style Windows Shell) & **Sakudone**
+* Contact me at: [aoom5961@gmail.com](mailto:aoom5961@gmail.com)
 
 ---
 
-### Featured Projects
+### </ Skills >
 
-#### [SakuDoko (Pomodoro Timer)](Link_to_Repo_or_Store)
-*A desktop application designed to boost productivity using the Pomodoro technique.*
-- **Highlights:** Published on Microsoft Store, custom UI implementation.
-
-#### [Custom Windows Shell](Link_to_Repo)
-*An experimental project to customize the Windows desktop environment, mimicking macOS aesthetics.*
-- **Highlights:** Deep system integration, exploring OS-level customization.
-
-#### [ThaiResQ](Link_to_Repo)
-*A conceptual mobile application for emergency communication in offline scenarios.*
-- **Highlights:** Designed for offline-first usage and intuitive UX.
+<p align="left">
+  <a href="https://skillicons.dev">
+    <img src="https://skillicons.dev/icons?i=ts,cs,java,py,react,nextjs,html,dotnet,git,vscode" />
+  </a>
+</p>
 
 ---
 
 ### Connect with Me
 
-[![Email](https://img.shields.io/badge/Email-Contact_Me-red?style=flat&logo=gmail&logoColor=white)](mailto:aoom5961@gmail.com)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/naphatsadon-prasakha-855808364?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app)
-[![Discord](https://img.shields.io/badge/Discord-Chat-7289DA?style=flat&logo=discord&logoColor=white)](https://discord.gg/your_link)
+<p align="left">
+  <a href="mailto:aoom5961@gmail.com">
+    <img src="https://skillicons.dev/icons?i=gmail" height="40" alt="gmail" />
+  </a>
+  &nbsp;
+  <a href="https://www.linkedin.com/in/naphatsadon-prasakha-855808364">
+    <img src="https://skillicons.dev/icons?i=linkedin" height="40" alt="linkedin" />
+  </a>
+  &nbsp;
+  <a href="https://discord.gg/your_link">
+    <img src="https://skillicons.dev/icons?i=discord" height="40" alt="discord" />
+  </a>
+</p>
