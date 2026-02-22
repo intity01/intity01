@@ -23,17 +23,14 @@ Currently looking for an **Internship opportunity (Summer 2026)** to apply my sk
 
 #### [SakuDoko (Pomodoro Timer)](Link_to_Repo_or_Store)
 *A desktop application designed to boost productivity using the Pomodoro technique.*
-- **Tech:** C#, .NET
 - **Highlights:** Published on Microsoft Store, custom UI implementation.
 
 #### [Custom Windows Shell](Link_to_Repo)
 *An experimental project to customize the Windows desktop environment, mimicking macOS aesthetics.*
-- **Tech:** C#, Win32 API
 - **Highlights:** Deep system integration, exploring OS-level customization.
 
 #### [ThaiResQ](Link_to_Repo)
 *A conceptual mobile application for emergency communication in offline scenarios.*
-- **Tech:** .NET MAUI, Cross-platform development
 - **Highlights:** Designed for offline-first usage and intuitive UX.
 
 ---
