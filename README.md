@@ -1,4 +1,4 @@
-<img src="https://via.placeholder.com/1500x300/1a1b26/ffffff?text=Naphatsadon+Prasakha+(intity01)" alt="Banner" width="100%">
+<img src="https://github.com/intity01/intity01/blob/main/Document.png?text=Naphatsadon+Prasakha+(intity01)" alt="Banner" width="100%">
 
 <br/>
 
