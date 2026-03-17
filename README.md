@@ -1,10 +1,13 @@
-<img src="https://github.com/intity01/intity01/blob/main/Document.png?text=Naphatsadon+Prasakha+(intity01)" alt="Banner" width="100%">
+<img src="https://capsule-render.vercel.app/api?type=rect&color=050505&text=Naphatsadon%20Prasakha&fontColor=ffffff&fontSize=40&desc=Software%20Engineer&descAlignY=65&descAlign=62" alt="Banner" width="100%">
 
 <br/>
 
 <h1>
   <a href="https://git.io/typing-svg">
-    <img src="https://readme-typing-svg.demolab.com?font=Inter&weight=700&size=28&pause=1000&color=FFFFFF&center=false&vCenter=true&width=600&lines=Hi+there,+I'm+intity01.;Multidisciplinary+Software+Engineer;Full-Stack,+DevOps+%26+AI+Enthusiast" alt="Typing SVG" />
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://readme-typing-svg.demolab.com?font=Inter&weight=700&size=28&pause=1000&color=FFFFFF&center=false&vCenter=true&width=600&lines=Hi+there,+I'm+intity01.;Multidisciplinary+Software+Engineer;Full-Stack,+DevOps+%26+AI+Enthusiast">
+      <img src="https://readme-typing-svg.demolab.com?font=Inter&weight=700&size=28&pause=1000&color=000000&center=false&vCenter=true&width=600&lines=Hi+there,+I'm+intity01.;Multidisciplinary+Software+Engineer;Full-Stack,+DevOps+%26+AI+Enthusiast" alt="Typing SVG" />
+    </picture>
   </a>
 </h1>
 
