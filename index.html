@@ -1,36 +1,25 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Naphatsadon | System Interface</title>
+    <title>Naphatsadon | Software Engineer</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Manrope:wght@300;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.34/dist/lenis.min.js"></script>
+
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['"Manrope"', 'sans-serif'],
-                        mono: ['"JetBrains Mono"', 'monospace'],
-                    },
+                    fontFamily: { sans: ['"Inter"', 'sans-serif'] },
                     colors: {
-                        surface: '#050505',
-                        accent: '#ffffff',
-                        secondary: '#666666',
-                        success: '#10b981', 
-                        warning: '#f59e0b', 
-                    },
-                    animation: {
-                        'fade-in': 'fadeIn 1s ease-out forwards',
-                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                    },
-                    keyframes: {
-                        fadeIn: {
-                            '0%': { opacity: '0', transform: 'translateY(10px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' },
-                        }
+                        bgDark: '#050505', /* ดำพรีเมียม ไม่ดำสนิท 100% ให้ดูมีมิติ */
+                        cardDark: 'rgba(20, 20, 20, 0.4)',
+                        cardBorder: 'rgba(255, 255, 255, 0.08)',
+                        textMuted: '#888888',
                     }
                 }
             }
@@ -38,572 +27,589 @@
     </script>
     <style>
         body {
-            background-color: #050505;
-            color: #e2e2e2;
-            cursor: default;
-            -webkit-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            overflow-x: hidden;
+            background-color: #050505; color: #ffffff;
+            font-family: 'Inter', sans-serif; overflow-x: hidden;
         }
 
-        #spotlight {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-            background: radial-gradient(600px circle at var(--x, 50%) var(--y, 50%), rgba(255, 255, 255, 0.05), transparent 40%);
-            transition: background 0.1s ease;
+        /* ซ่อน Cursor ปกติเฉพาะบน Desktop */
+        @media (pointer: fine) { body { cursor: none; } }
+
+        /* Lenis Required CSS */
+        html.lenis, html.lenis body { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+        .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+        .lenis.lenis-stopped { overflow: hidden; }
+
+        /* Noise Texture Overlay (ให้ดูมีความอาร์ต ถ่ายหนัง) */
+        .noise-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 50; opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
 
-        .bg-grid {
-            background-size: 50px 50px;
-            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                              linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
-            -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+        /* Splash Screen (ม่านแยกซ้ายขวา) */
+        #splash-screen {
+            position: fixed; inset: 0; z-index: 9999;
+            display: flex; justify-content: center; align-items: center; pointer-events: none;
+        }
+        .splash-panel {
+            position: absolute; width: 50%; height: 100%; background: #ffffff;
+            transition: transform 1.2s cubic-bezier(0.76, 0, 0.24, 1);
+        }
+        .splash-left { left: 0; transform-origin: left; }
+        .splash-right { right: 0; transform-origin: right; }
+        #splash-text {
+            z-index: 10000; color: #050505; mix-blend-mode: difference;
+            transition: opacity 0.5s;
         }
 
-        .status-bar {
-            background: rgba(10, 10, 10, 0.6);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        /* Custom Cursor */
+        .cursor-dot, .cursor-outline {
+            position: fixed; top: 0; left: 0; transform: translate(-50%, -50%);
+            border-radius: 50%; z-index: 10000; pointer-events: none;
+        }
+        .cursor-dot { width: 6px; height: 6px; background-color: white; }
+        .cursor-outline {
+            width: 36px; height: 36px; border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+        .cursor-hover .cursor-outline {
+            width: 50px; height: 50px; background-color: white; mix-blend-mode: difference; border-color: transparent;
+        }
+        /* ซ่อนวงแหวนเมาส์ในมือถือ */
+        @media (max-width: 768px) { .cursor-dot, .cursor-outline { display: none; } }
+
+        /* Floating Navbar */
+        .nav-pill {
+            background: rgba(20, 20, 20, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        .status-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0 1rem;
-            height: 100%;
-            transition: background 0.2s;
-            cursor: pointer;
-            font-family: 'JetBrains Mono', monospace;
+        /* Mobile Menu */
+        #mobile-menu {
+            position: fixed; inset: 0; background: #050505; z-index: 40;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
         }
+        #mobile-menu.active { opacity: 1; pointer-events: auto; }
 
-        .status-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
+        /* Monochrome Glass Cards */
+        .glass-card {
+            background: var(--cardDark); border: 1px solid var(--cardBorder);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border-radius: 16px; transition: border-color 0.4s ease, background 0.4s;
         }
+        .glass-card:hover { border-color: rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.02); }
 
-        .status-item.active {
-            background: rgba(255, 255, 255, 0.15);
-            color: white;
-        }
+        /* Magnetic Wrap */
+        .magnetic-wrap { display: inline-block; padding: 20px; margin: -20px; }
+        .magnetic-btn { transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
 
-        /* Scroll Reveal Utility */
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
-        }
+        /* Sequence & Reveal */
+        .hero-reveal { opacity: 0; transform: translateY(30px); transition: opacity 1s ease-out, transform 1s cubic-bezier(0.16, 1, 0.3, 1); }
+        .hero-reveal.is-visible { opacity: 1; transform: translateY(0); }
+        .sequence-step { opacity: 0; transform: translateY(40px) scale(0.95); transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); position: absolute; width: 100%; text-align: center; }
+        .sequence-step.is-active { opacity: 1; transform: translateY(0) scale(1); }
+        .sequence-step.is-past { opacity: 0; transform: translateY(-40px) scale(1.05); }
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 1s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
 
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        /* Image Grayscale Effect for Premium look */
+        .bw-hover { filter: grayscale(100%); transition: filter 0.5s ease; }
+        .glass-card:hover .bw-hover { filter: grayscale(0%); }
 
-        /* Typewriter Cursor */
-        .typing-cursor::after {
-            content: '█';
-            animation: blink 1s step-start infinite;
-            color: white;
-            margin-left: 4px;
-        }
-
-        @keyframes blink {
-            50% { opacity: 0; }
-        }
-
-        /* Hide scrollbar */
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body class="antialiased selection:bg-white selection:text-black">
+<body class="antialiased selection:bg-black selection:text-white">
 
-    <div id="spotlight"></div>
-    <div class="fixed inset-0 bg-grid z-0 pointer-events-none"></div>
+    <div class="noise-bg"></div>
 
-    <div class="fixed top-6 left-6 z-50 mix-blend-difference">
-        <a href="#" class="font-mono font-bold text-sm tracking-widest text-white opacity-80 hover:opacity-100 transition">
-            // NAPHATSADON_CV
-        </a>
+    <div id="splash-screen">
+        <div class="splash-panel splash-left" id="panel-left"></div>
+        <div class="splash-panel splash-right" id="panel-right"></div>
+        <h1 id="splash-text" class="text-4xl md:text-5xl font-extrabold tracking-tighter">System Ready.</h1>
     </div>
 
-    <div class="fixed top-6 right-6 z-50 flex gap-4 backdrop-blur-md bg-black/20 p-2 rounded-lg border border-white/5">
-        <a href="https://github.com/intity01" target="_blank" class="text-secondary hover:text-white transition transform hover:scale-110">
-            <i class="fab fa-github text-xl"></i>
-        </a>
-        <a href="https://www.linkedin.com/in/naphatsadon-prasakha-855808364/" target="_blank" class="text-secondary hover:text-white transition transform hover:scale-110">
-            <i class="fab fa-linkedin text-xl"></i>
-        </a>
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-outline" id="cursor-outline"></div>
+
+    <nav class="fixed top-6 left-1/2 -translate-x-1/2 z-50 hidden md:flex nav-pill rounded-full px-8 py-3 gap-8 items-center">
+        <a href="#home" class="font-bold tracking-tight hover-target smooth-link hover-sound">intity01</a>
+        <div class="w-px h-4 bg-white/20"></div>
+        <a href="#projects" class="text-sm font-medium text-textMuted hover:text-white transition-colors hover-target smooth-link hover-sound">Work</a>
+        <a href="#about" class="text-sm font-medium text-textMuted hover:text-white transition-colors hover-target smooth-link hover-sound">About</a>
+        <div class="w-px h-4 bg-white/20"></div>
+        <div class="flex gap-4">
+            <a href="https://github.com/intity01" target="_blank" class="text-textMuted hover:text-white transition-colors hover-target hover-sound"><i class="fab fa-github"></i></a>
+            <a href="https://www.linkedin.com/in/naphatsadon-prasakha-855808364/" target="_blank" class="text-textMuted hover:text-white transition-colors hover-target hover-sound"><i class="fab fa-linkedin"></i></a>
+        </div>
+    </nav>
+
+    <div class="fixed top-0 left-0 w-full z-50 md:hidden flex justify-between items-center px-6 py-4 nav-pill rounded-none border-t-0 border-l-0 border-r-0">
+        <a href="#home" class="font-bold tracking-tight smooth-link click-sound">Naphatsadon.</a>
+        <button id="menu-toggle" class="text-white focus:outline-none click-sound">
+            <i class="fas fa-bars text-xl"></i>
+        </button>
     </div>
 
-    <main class="relative z-10 pb-20">
+    <div id="mobile-menu">
+        <div class="flex flex-col items-center gap-8 text-2xl font-semibold tracking-tight">
+            <a href="#home" class="mobile-link smooth-link click-sound">Home</a>
+            <a href="#projects" class="mobile-link smooth-link click-sound">Work</a>
+            <a href="#about" class="mobile-link smooth-link click-sound">About</a>
+            <a href="./CV-NAPHATSADON.pdf" target="_blank" class="mobile-link text-textMuted click-sound">Résumé</a>
+        </div>
+        <div class="flex gap-8 mt-16 text-2xl text-textMuted">
+            <a href="https://github.com/intity01" target="_blank" class="click-sound"><i class="fab fa-github"></i></a>
+            <a href="https://www.linkedin.com/in/naphatsadon-prasakha-855808364/" target="_blank" class="click-sound"><i class="fab fa-linkedin"></i></a>
+        </div>
+    </div>
+
+    <main class="relative z-10" id="home">
         
-        <section id="home" class="min-h-screen flex flex-col justify-center items-center text-center px-4 pt-24 md:pt-10">
-            
-            <div class="font-mono text-xs text-secondary mb-6 animate-fade-in opacity-0" style="animation-delay: 0.2s;">
-                <span class="text-success animate-pulse">●</span> SYSTEM ONLINE
-            </div>
-
-            <h1 class="text-4xl md:text-6xl lg:text-8xl font-bold tracking-tighter mb-8 animate-fade-in opacity-0" style="animation-delay: 0.4s;">
-                SOFTWARE <span class="text-secondary opacity-50">ENGINEER</span><br>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-400 to-gray-600">MULTIDISCIPLINARY.</span>
-            </h1>
-
-            <div class="max-w-xl w-full text-secondary text-sm md:text-base leading-relaxed mb-12 animate-fade-in opacity-0" style="animation-delay: 0.6s;">
-                <div class="font-mono border border-white/10 bg-black/40 backdrop-blur-sm p-4 rounded-md text-left mx-auto shadow-[0_0_15px_rgba(255,255,255,0.03)]">
-                    <p id="typewriter" class="typing-cursor"></p>
-                </div>
-            </div>
-
-            <div class="flex flex-col w-full md:w-auto md:flex-row gap-4 animate-fade-in opacity-0" style="animation-delay: 0.8s;">
-                <a href="#projects" class="px-8 py-4 bg-white text-black font-mono text-xs font-bold uppercase tracking-widest hover:scale-105 hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] transition-all duration-300 text-center">
-                    View_Projects
-                </a>
-                <a href="./CV-NAPHATSADON.pdf" target="_blank" class="px-8 py-4 border border-white/20 text-white font-mono text-xs font-bold uppercase tracking-widest hover:bg-white/10 hover:backdrop-blur-md transition-all duration-300 flex items-center justify-center gap-2">
-                    <i class="fas fa-download"></i> Download_CV
-                </a>
-            </div>
-        </section>
-
-        <section id="projects" class="py-20 max-w-6xl mx-auto px-6 overflow-hidden">
-            <div class="flex items-end justify-between mb-16 border-b border-white/10 pb-4 reveal">
-                <h2 class="text-3xl font-bold flex items-center gap-3">
-                    <span class="text-xs font-mono text-secondary">01.</span> Selected Works
-                </h2>
-                <span class="font-mono text-xs text-secondary hidden md:block">Based on CV</span>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-                <a href="https://apps.microsoft.com/detail/9nb7fhv3xlhw?hl=en-us&gl=TH" target="_blank" class="reveal group relative bg-black/40 backdrop-blur-md border border-white/10 hover:border-white/40 hover:shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-all duration-500 min-h-[380px] h-auto overflow-hidden block rounded-lg">
-                    <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/90 z-10"></div>
-                    <div class="absolute inset-0 bg-gray-900 group-hover:scale-110 transition-transform duration-700 flex items-center justify-center opacity-50 group-hover:opacity-100">
-                        <i class="fas fa-stopwatch text-6xl text-white/10 group-hover:text-white/30 transition duration-500 blur-[2px] group-hover:blur-0"></i>
-                    </div>
-                    
-                    <div class="relative z-20 h-full flex flex-col justify-between p-8">
-                        <div class="flex justify-between items-start mb-4">
-                            <span class="font-mono text-xs text-white/60 bg-white/5 px-2 py-1 rounded backdrop-blur-sm">DESKTOP_APP</span>
-                            <i class="fas fa-external-link-alt text-white/30 group-hover:text-white transition-colors duration-300 transform group-hover:-translate-y-1 group-hover:translate-x-1"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-2xl font-bold mb-2 group-hover:translate-x-2 transition-transform duration-300 text-white">SakuDoko</h3>
-                            <p class="text-sm text-gray-400 mb-6 group-hover:text-gray-300 transition-colors">Productivity app with macOS-like UI. Features Pomodoro timer and task management.</p>
-                            <div class="flex flex-wrap gap-2">
-                                <span class="px-2 py-1 bg-white/5 border border-white/10 text-[10px] font-mono uppercase text-gray-300 rounded">React</span>
-                                <span class="px-2 py-1 bg-white/5 border border-white/10 text-[10px] font-mono uppercase text-gray-300 rounded">Electron</span>
-                                <span class="px-2 py-1 bg-white/5 border border-white/10 text-[10px] font-mono uppercase text-gray-300 rounded">TypeScript</span>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-
-                <a href="https://sakudoko-bot.fly.dev/" target="_blank" class="reveal group relative bg-black/40 backdrop-blur-md border border-white/10 hover:border-white/40 hover:shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-all duration-500 min-h-[380px] h-auto overflow-hidden block rounded-lg" style="transition-delay: 100ms;">
-                    <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/90 z-10"></div>
-                    <div class="absolute inset-0 bg-gray-900 group-hover:scale-110 transition-transform duration-700 flex items-center justify-center opacity-50 group-hover:opacity-100">
-                        <i class="fas fa-music text-6xl text-white/10 group-hover:text-white/30 transition duration-500 blur-[2px] group-hover:blur-0"></i>
-                    </div>
-                    
-                    <div class="relative z-20 h-full flex flex-col justify-between p-8">
-                        <div class="flex justify-between items-start mb-4">
-                            <span class="font-mono text-xs text-white/60 bg-white/5 px-2 py-1 rounded backdrop-blur-sm">BACKEND_AUDIO</span>
-                            <i class="fas fa-external-link-alt text-white/30 group-hover:text-white transition-colors duration-300 transform group-hover:-translate-y-1 group-hover:translate-x-1"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-2xl font-bold mb-2 group-hover:translate-x-2 transition-transform duration-300 text-white">Discord Music Bot</h3>
-                            <p class="text-sm text-gray-400 mb-6 group-hover:text-gray-300 transition-colors">High-performance bot serving 500+ users. Integrated Spotify/YouTube APIs with audio filtering.</p>
-                            <div class="flex gap-2 flex-wrap">
-                                <span class="px-2 py-1 bg-white/5 border border-white/10 text-[10px] font-mono uppercase text-gray-300 rounded">Node.js</span>
-                                <span class="px-2 py-1 bg-white/5 border border-white/10 text-[10px] font-mono uppercase text-gray-300 rounded">API</span>
-                                <span class="px-2 py-1 bg-white/5 border border-white/10 text-[10px] font-mono uppercase text-gray-300 rounded">Sound Eng.</span>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-
-                <a href="https://chacole-92yzshx40-intity01s-projects.vercel.app/" target="_blank" class="reveal group relative bg-black/40 backdrop-blur-md border border-white/10 hover:border-white/40 hover:shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-all duration-500 min-h-[380px] h-auto overflow-hidden block rounded-lg" style="transition-delay: 200ms;">
-                    <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/90 z-10"></div>
-                    <div class="absolute inset-0 bg-gray-900 group-hover:scale-110 transition-transform duration-700 flex items-center justify-center opacity-50 group-hover:opacity-100">
-                        <i class="fas fa-comments text-6xl text-white/10 group-hover:text-white/30 transition duration-500 blur-[2px] group-hover:blur-0"></i>
-                    </div>
-                    
-                    <div class="relative z-20 h-full flex flex-col justify-between p-8">
-                        <div class="flex justify-between items-start mb-4">
-                            <span class="font-mono text-xs text-white/60 bg-white/5 px-2 py-1 rounded backdrop-blur-sm">REALTIME_SYS</span>
-                            <i class="fas fa-external-link-alt text-white/30 group-hover:text-white transition-colors duration-300 transform group-hover:-translate-y-1 group-hover:translate-x-1"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-2xl font-bold mb-2 group-hover:translate-x-2 transition-transform duration-300 text-white">Anonymous Chat</h3>
-                            <p class="text-sm text-gray-400 mb-6 group-hover:text-gray-300 transition-colors">Privacy-first real-time chat platform. Containerized for seamless deployment.</p>
-                            <div class="flex flex-wrap gap-2">
-                                <span class="px-2 py-1 bg-white/5 border border-white/10 text-[10px] font-mono uppercase text-gray-300 rounded">FastAPI</span>
-                                <span class="px-2 py-1 bg-white/5 border border-white/10 text-[10px] font-mono uppercase text-gray-300 rounded">WebSocket</span>
-                                <span class="px-2 py-1 bg-white/5 border border-white/10 text-[10px] font-mono uppercase text-gray-300 rounded">Docker</span>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-
-                <a href="https://github.com/intity01/MediaFlow" target="_blank" class="reveal group relative bg-black/40 backdrop-blur-md border border-white/10 hover:border-white/40 hover:shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-all duration-500 min-h-[380px] h-auto overflow-hidden block rounded-lg" style="transition-delay: 300ms;">
-                    <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/90 z-10"></div>
-                    <div class="absolute inset-0 bg-gray-900 group-hover:scale-110 transition-transform duration-700 flex items-center justify-center opacity-50 group-hover:opacity-100">
-                        <i class="fas fa-layer-group text-6xl text-white/10 group-hover:text-white/30 transition duration-500 blur-[2px] group-hover:blur-0"></i>
-                    </div>
-                    
-                    <div class="relative z-20 h-full flex flex-col justify-between p-8">
-                        <div class="flex justify-between items-start mb-4">
-                            <span class="font-mono text-xs text-white/60 bg-white/5 px-2 py-1 rounded backdrop-blur-sm">OPEN_SOURCE</span>
-                            <i class="fas fa-external-link-alt text-white/30 group-hover:text-white transition-colors duration-300 transform group-hover:-translate-y-1 group-hover:translate-x-1"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-2xl font-bold mb-2 group-hover:translate-x-2 transition-transform duration-300 text-white">MediaFlow</h3>
-                            <p class="text-sm text-gray-400 mb-6 group-hover:text-gray-300 transition-colors">Local media toolkit with AI stem separation, media downloading, and audio processing.</p>
-                            <div class="flex flex-wrap gap-2">
-                                <span class="px-2 py-1 bg-white/5 border border-white/10 text-[10px] font-mono uppercase text-gray-300 rounded">Tauri 2</span>
-                                <span class="px-2 py-1 bg-white/5 border border-white/10 text-[10px] font-mono uppercase text-gray-300 rounded">React</span>
-                                <span class="px-2 py-1 bg-white/5 border border-white/10 text-[10px] font-mono uppercase text-gray-300 rounded">AI</span>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-
-            </div>
-        </section>
-
-        <section id="modules" class="py-20 max-w-6xl mx-auto px-6 border-b border-white/10 overflow-hidden">
-            <div class="flex items-end justify-between mb-8 reveal">
-                <h2 class="text-3xl font-bold flex items-center gap-3">
-                    <span class="text-xs font-mono text-secondary">02.</span> Technical Arsenal
-                </h2>
-                <span class="font-mono text-xs text-secondary hidden md:block">Skills & Tools</span>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="reveal bg-black/40 backdrop-blur-md p-6 border border-white/10 hover:bg-white/10 hover:-translate-y-2 transition-all duration-300 rounded-lg" style="transition-delay: 0ms;">
-                    <i class="fas fa-code text-2xl text-white mb-4"></i>
-                    <h3 class="font-mono text-xs text-secondary mb-1">LANGUAGES</h3>
-                    <div class="text-lg font-bold mb-3">Core Stack</div>
-                    <ul class="text-sm text-gray-400 space-y-2 font-mono">
-                        <li><span class="text-success">></span> C# / Python</li>
-                        <li><span class="text-success">></span> JavaScript / TS</li>
-                        <li><span class="text-success">></span> SQL</li>
-                    </ul>
-                </div>
-
-                <div class="reveal bg-black/40 backdrop-blur-md p-6 border border-white/10 hover:bg-white/10 hover:-translate-y-2 transition-all duration-300 rounded-lg" style="transition-delay: 100ms;">
-                    <i class="fas fa-desktop text-2xl text-white mb-4"></i>
-                    <h3 class="font-mono text-xs text-secondary mb-1">INTERFACE</h3>
-                    <div class="text-lg font-bold mb-3">Frontend</div>
-                    <ul class="text-sm text-gray-400 space-y-2 font-mono">
-                        <li><span class="text-success">></span> React / Next.js</li>
-                        <li><span class="text-success">></span> Electron / Tauri</li>
-                        <li><span class="text-success">></span> Tailwind CSS</li>
-                    </ul>
-                </div>
-
-                 <div class="reveal bg-black/40 backdrop-blur-md p-6 border border-white/10 hover:bg-white/10 hover:-translate-y-2 transition-all duration-300 rounded-lg" style="transition-delay: 200ms;">
-                    <i class="fas fa-tools text-2xl text-white mb-4"></i>
-                    <h3 class="font-mono text-xs text-secondary mb-1">DEVOPS</h3>
-                    <div class="text-lg font-bold mb-3">Tools</div>
-                    <ul class="text-sm text-gray-400 space-y-2 font-mono">
-                        <li><span class="text-warning">></span> Docker / Git</li>
-                        <li><span class="text-warning">></span> JIRA / Vercel</li>
-                        <li><span class="text-secondary">></span> VS Code</li>
-                    </ul>
-                </div>
-
-                <div class="reveal bg-black/40 backdrop-blur-md p-6 border border-white/10 hover:border-white/40 hover:bg-white/10 hover:-translate-y-2 transition-all duration-300 relative overflow-hidden rounded-lg hover:shadow-[0_0_20px_rgba(255,255,255,0.1)]" style="transition-delay: 300ms;">
-                    <div class="absolute top-0 right-0 p-1 px-3 bg-white text-black text-[10px] font-bold font-mono rounded-bl-lg">SPECIAL</div>
-                    <i class="fas fa-wave-square text-2xl text-white mb-4"></i>
-                    <h3 class="font-mono text-xs text-secondary mb-1">MULTIMEDIA</h3>
-                    <div class="text-lg font-bold mb-3">Sound Engineering</div>
-                    <ul class="text-sm text-gray-400 space-y-2 font-mono">
-                        <li><span class="text-success">></span> Audio Filtering</li>
-                        <li><span class="text-success">></span> Mixing</li>
-                        <li><span class="text-success">></span> Sound Design</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <section id="certificates" class="py-20 max-w-6xl mx-auto px-6 border-b border-white/10 overflow-hidden">
-            <div class="flex items-end justify-between mb-8 reveal">
-                <h2 class="text-3xl font-bold flex items-center gap-3">
-                    <span class="text-xs font-mono text-secondary">03.</span> Credentials
-                </h2>
-                <span class="font-mono text-xs text-secondary hidden md:block">Certificates & Awards</span>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="reveal bg-black/40 backdrop-blur-md p-6 border border-white/10 flex items-start gap-4 hover:bg-white/10 hover:scale-[1.02] transition-all duration-300 rounded-lg" style="transition-delay: 0ms;">
-                    <div class="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center text-blue-400 shrink-0 border border-blue-500/30">
-                        <i class="fab fa-google text-2xl"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-bold text-white">Technical Support</h3>
-                        <p class="text-sm text-gray-400 font-mono mb-2">Google</p>
-                        <span class="px-2 py-1 bg-white/5 text-[10px] border border-white/10 rounded">Fundamentals</span>
-                    </div>
-                </div>
-
-                <div class="reveal bg-black/40 backdrop-blur-md p-6 border border-white/10 flex items-start gap-4 hover:bg-white/10 hover:scale-[1.02] transition-all duration-300 rounded-lg" style="transition-delay: 150ms;">
-                    <div class="w-12 h-12 bg-red-500/20 rounded-lg flex items-center justify-center text-red-400 shrink-0 border border-red-500/30">
-                        <i class="fas fa-flag text-2xl"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-bold text-white">CTF Bootcamp</h3>
-                        <p class="text-sm text-gray-400 font-mono mb-2">THNCA</p>
-                        <span class="px-2 py-1 bg-white/5 text-[10px] border border-white/10 rounded">2023 / 2025</span>
-                    </div>
-                </div>
-
-                <div class="reveal bg-black/40 backdrop-blur-md p-6 border border-white/10 flex items-start gap-4 hover:bg-white/10 hover:scale-[1.02] transition-all duration-300 rounded-lg" style="transition-delay: 300ms;">
-                    <div class="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center text-green-400 shrink-0 border border-green-500/30">
-                        <i class="fas fa-shield-halved text-2xl"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-bold text-white">Basic Cyber</h3>
-                        <p class="text-sm text-gray-400 font-mono mb-2">CBLP</p>
-                        <span class="px-2 py-1 bg-white/5 text-[10px] border border-white/10 rounded">Security</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="journey" class="py-20 max-w-4xl mx-auto px-4 md:px-6 overflow-hidden">
-            <div class="flex items-end justify-between mb-16 border-b border-white/10 pb-4 reveal">
-                <h2 class="text-3xl font-bold flex items-center gap-3">
-                    <span class="text-xs font-mono text-secondary">04.</span> Experience Log
-                </h2>
-                <span class="font-mono text-xs text-secondary hidden md:block">Timeline</span>
-            </div>
-            
-            <div class="space-y-0 border-l border-white/10 ml-0 md:ml-2">
+        <section class="h-screen flex flex-col justify-center items-center text-center px-6 relative">
+            <div class="mt-10">
+                <p class="hero-reveal text-textMuted font-medium mb-6 tracking-[0.2em] uppercase text-xs" style="transition-delay: 0.1s;">Software Engineer</p>
+                <h1 class="hero-reveal text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-[1.1] mb-8 max-w-4xl mx-auto" style="transition-delay: 0.2s;">
+                    Engineering <span class="text-textMuted italic font-medium">elegant</span> logic &<br>
+                    solid infrastructure.
+                </h1>
                 
-                <div class="reveal pl-8 pb-12 relative group" style="transition-delay: 0ms;">
-                    <div class="absolute left-[-5px] top-2 w-2.5 h-2.5 bg-white rounded-full group-hover:scale-150 group-hover:shadow-[0_0_10px_#fff] transition-all duration-300"></div>
-                    <span class="font-mono text-xs text-secondary mb-1 block">Jan 2025 - Present</span>
-                    <h3 class="text-xl font-bold text-white">Game Tester @ Lionbridge</h3>
-                    <p class="text-sm text-gray-400 mt-2">Executed functional testing and reported bugs using JIRA to ensure game stability. Collaborated with dev teams.</p>
+                <div class="hero-reveal flex flex-col sm:flex-row gap-6 justify-center items-center mt-12" style="transition-delay: 0.4s;">
+                    <div class="magnetic-wrap hover-target smooth-link hover-sound click-sound">
+                        <a href="#projects" class="magnetic-btn block px-8 py-4 bg-white text-black rounded-full font-bold uppercase tracking-widest text-xs hover:scale-105 transition-transform">
+                            View Projects
+                        </a>
+                    </div>
+                    
+                    <div class="magnetic-wrap hover-target hover-sound click-sound">
+                        <a href="./CV-NAPHATSADON.pdf" target="_blank" class="magnetic-btn block px-8 py-4 border border-white/20 rounded-full font-bold uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-all flex items-center gap-2">
+                            Download CV
+                        </a>
+                    </div>
                 </div>
+            </div>
+            
+            <div class="hero-reveal absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 opacity-30" style="transition-delay: 0.6s;">
+                <div class="w-[1px] h-12 bg-gradient-to-b from-white to-transparent"></div>
+            </div>
+        </section>
 
-                <div class="reveal pl-8 pb-12 relative group" style="transition-delay: 150ms;">
-                    <div class="absolute left-[-5px] top-2 w-2.5 h-2.5 bg-gray-600 rounded-full group-hover:bg-white group-hover:scale-150 group-hover:shadow-[0_0_10px_#fff] transition-all duration-300"></div>
-                    <span class="font-mono text-xs text-secondary mb-1 block">Mar 2025 - May 2025</span>
-                    <h3 class="text-xl font-bold text-white">IT Support @ Acacia</h3>
-                    <p class="text-sm text-gray-400 mt-2">Provided technical support, troubleshooting hardware/software, and assisted in network configuration.</p>
-                </div>
-
-                <div class="reveal pl-8 pb-12 relative group" style="transition-delay: 300ms;">
-                    <div class="absolute left-[-5px] top-2 w-2.5 h-2.5 bg-gray-600 rounded-full group-hover:bg-white group-hover:scale-150 group-hover:shadow-[0_0_10px_#fff] transition-all duration-300"></div>
-                    <span class="font-mono text-xs text-secondary mb-1 block">Short-term Project</span>
-                    <h3 class="text-xl font-bold text-white">Assistant Clerical Officer @ Clicknik</h3>
-                    <p class="text-sm text-gray-400 mt-2">Assisted with data entry and administrative tasks for project support.</p>
-                </div>
-
-                <div class="reveal pl-8 relative group" style="transition-delay: 450ms;">
-                    <div class="absolute left-[-5px] top-2 w-2.5 h-2.5 bg-gray-600 rounded-full group-hover:bg-white group-hover:scale-150 group-hover:shadow-[0_0_10px_#fff] transition-all duration-300"></div>
-                    <span class="font-mono text-xs text-secondary mb-1 block">Expected 2028</span>
-                    <h3 class="text-xl font-bold text-white">B.Sc. @ Thai-Nichi Institute</h3>
-                    <p class="text-sm text-gray-400 mt-2">Studying Information Technology. Actively participating in CTF Bootcamps (THNCA).</p>
+        <section id="story-section" class="relative border-y border-white/10" style="height: 300vh;">
+            <div class="sticky top-0 h-screen flex items-center justify-center overflow-hidden bg-black/50 backdrop-blur-sm">
+                <div class="relative w-full max-w-4xl px-6 h-40 flex items-center justify-center">
+                    <div class="sequence-step" id="step-1"><h2 class="text-3xl md:text-6xl font-black tracking-tight uppercase">I don't just write code.</h2></div>
+                    <div class="sequence-step" id="step-2"><h2 class="text-3xl md:text-6xl font-black tracking-tight uppercase">I build <span class="text-textMuted">systems</span>.</h2></div>
+                    <div class="sequence-step" id="step-3"><h2 class="text-3xl md:text-6xl font-black tracking-tight uppercase text-textMuted"><span class="text-white">Scalable.</span> Secure.</h2></div>
+                    <div class="sequence-step" id="step-4"><h2 class="text-3xl md:text-6xl font-black tracking-tight uppercase">Ready for production.</h2></div>
                 </div>
             </div>
         </section>
 
-        <section class="py-12 text-center border-t border-white/5 mt-10 reveal">
-            <p class="text-gray-500 text-sm font-mono mb-4 hover:text-white transition-colors duration-300">aoom5961@gmail.com | +66 64-963-6875</p>
-            <p class="text-gray-600 text-xs">SYSTEM_ID: NAPHATSADON // END_OF_LINE</p>
+        <section id="projects" class="py-32 max-w-7xl mx-auto px-6">
+            <div class="mb-20 reveal">
+                <h2 class="text-4xl md:text-6xl font-black tracking-tighter mb-4">Selected Work.</h2>
+                <div class="w-12 h-1 bg-white mb-6"></div>
+                <p class="text-textMuted text-lg uppercase tracking-widest text-xs font-bold">01 // Projects & Open Source</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                
+                <a href="https://github.com/intity01/MediaFlow" target="_blank" class="hover-target hover-sound click-sound glass-card col-span-1 lg:col-span-2 p-10 flex flex-col justify-between group relative reveal block">
+                    <div class="relative z-10 mb-20">
+                        <div class="flex justify-between items-start mb-6">
+                            <i class="fas fa-layer-group text-2xl text-white"></i>
+                            <i class="fas fa-arrow-right -rotate-45 text-textMuted group-hover:text-white transition-colors"></i>
+                        </div>
+                        <h3 class="text-4xl font-bold mb-4 tracking-tight">MediaFlow</h3>
+                        <p class="text-textMuted max-w-lg leading-relaxed">Local media processing toolkit featuring GPU-accelerated AI models (Demucs, MDX-Net) for audio stem separation and batch processing.</p>
+                    </div>
+                    <div class="relative z-10 flex gap-2">
+                        <span class="px-3 py-1 border border-white/20 rounded-full text-xs font-medium uppercase tracking-wider">Tauri</span>
+                        <span class="px-3 py-1 border border-white/20 rounded-full text-xs font-medium uppercase tracking-wider">React</span>
+                        <span class="px-3 py-1 bg-white text-black rounded-full text-xs font-bold uppercase tracking-wider">AI</span>
+                    </div>
+                </a>
+
+                <a href="https://sakudoko-bot.fly.dev/" target="_blank" class="hover-target hover-sound click-sound glass-card p-10 flex flex-col justify-between group relative reveal block">
+                    <div class="relative z-10 mb-12">
+                        <div class="flex justify-between items-start mb-6">
+                            <i class="fas fa-music text-2xl text-white"></i>
+                            <i class="fas fa-arrow-right -rotate-45 text-textMuted group-hover:text-white transition-colors"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3 tracking-tight">Discord Music Bot</h3>
+                        <p class="text-textMuted text-sm leading-relaxed">Engineered a scalable music bot integrating APIs with advanced audio filtering.</p>
+                    </div>
+                    <div class="relative z-10">
+                        <span class="px-3 py-1 border border-white/20 rounded-full text-xs font-medium uppercase tracking-wider">Node.js</span>
+                    </div>
+                </a>
+
+                <a href="https://chacole-92yzshx40-intity01s-projects.vercel.app/" target="_blank" class="hover-target hover-sound click-sound glass-card p-10 flex flex-col justify-between group relative reveal block">
+                    <div class="relative z-10 mb-12">
+                        <div class="flex justify-between items-start mb-6">
+                            <i class="fas fa-user-secret text-2xl text-white"></i>
+                            <i class="fas fa-arrow-right -rotate-45 text-textMuted group-hover:text-white transition-colors"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3 tracking-tight">Anonymous Chat</h3>
+                        <p class="text-textMuted text-sm leading-relaxed">Full-stack real-time chat platform built for privacy. Docker containerized.</p>
+                    </div>
+                    <div class="relative z-10 flex gap-2">
+                        <span class="px-3 py-1 border border-white/20 rounded-full text-xs font-medium uppercase tracking-wider">FastAPI</span>
+                    </div>
+                </a>
+
+                <a href="#" class="hover-target hover-sound click-sound glass-card col-span-1 lg:col-span-2 p-10 flex flex-col justify-between group relative reveal block">
+                    <div class="relative z-10 mb-12">
+                        <div class="flex justify-between items-start mb-6">
+                            <i class="fas fa-check-circle text-2xl text-white"></i>
+                            <i class="fas fa-arrow-right -rotate-45 text-textMuted group-hover:text-white transition-colors"></i>
+                        </div>
+                        <h3 class="text-3xl font-bold mb-4 tracking-tight">Sakukorosan</h3>
+                        <p class="text-textMuted max-w-lg leading-relaxed">Desktop productivity application featuring a Pomodoro timer and task management. Designed with a cross-platform macOS-like UI.</p>
+                    </div>
+                    <div class="relative z-10 flex gap-2">
+                        <span class="px-3 py-1 border border-white/20 rounded-full text-xs font-medium uppercase tracking-wider">Electron</span>
+                        <span class="px-3 py-1 border border-white/20 rounded-full text-xs font-medium uppercase tracking-wider">TypeScript</span>
+                    </div>
+                </a>
+            </div>
         </section>
+
+        <section id="about" class="py-32 max-w-7xl mx-auto px-6 border-t border-white/10">
+            <div class="mb-20 reveal">
+                <h2 class="text-4xl md:text-6xl font-black tracking-tighter mb-4">Background.</h2>
+                <div class="w-12 h-1 bg-white mb-6"></div>
+                <p class="text-textMuted text-lg uppercase tracking-widest text-xs font-bold">02 // Skills & Experience</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
+                <div class="lg:col-span-5 space-y-16">
+                    <div class="reveal">
+                        <h3 class="text-sm font-bold tracking-widest uppercase text-textMuted mb-8 border-b border-white/10 pb-4">Technical Stack</h3>
+                        <div class="space-y-6 text-sm">
+                            <div class="grid grid-cols-3">
+                                <span class="text-textMuted">Languages</span>
+                                <span class="col-span-2 font-medium">C#, Python, JS/TS, SQL</span>
+                            </div>
+                            <div class="grid grid-cols-3">
+                                <span class="text-textMuted">Frontend</span>
+                                <span class="col-span-2 font-medium">React, Next.js, Electron, Tauri</span>
+                            </div>
+                            <div class="grid grid-cols-3">
+                                <span class="text-textMuted">Backend</span>
+                                <span class="col-span-2 font-medium">Node.js, FastAPI, .NET Maui</span>
+                            </div>
+                            <div class="grid grid-cols-3">
+                                <span class="text-textMuted">Tools</span>
+                                <span class="col-span-2 font-medium">Docker, Git, CI/CD, Sound Eng.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="reveal">
+                        <h3 class="text-sm font-bold tracking-widest uppercase text-textMuted mb-8 border-b border-white/10 pb-4">Certifications</h3>
+                        <ul class="space-y-4 text-sm">
+                            <li class="flex justify-between items-center group cursor-default">
+                                <span class="font-medium group-hover:text-white transition-colors">Azure Fundamentals AZ-900</span>
+                                <span class="text-textMuted font-mono text-xs">Microsoft</span>
+                            </li>
+                            <li class="flex justify-between items-center group cursor-default">
+                                <span class="font-medium group-hover:text-white transition-colors">Supervised Machine Learning</span>
+                                <span class="text-textMuted font-mono text-xs">Coursera</span>
+                            </li>
+                            <li class="flex justify-between items-center group cursor-default">
+                                <span class="font-medium group-hover:text-white transition-colors">Technical Support</span>
+                                <span class="text-textMuted font-mono text-xs">Google</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-7 reveal">
+                    <h3 class="text-sm font-bold tracking-widest uppercase text-textMuted mb-8 border-b border-white/10 pb-4">Experience Log</h3>
+                    
+                    <div class="space-y-12">
+                        
+                        <div class="group">
+                            <div class="flex flex-col md:flex-row md:items-baseline justify-between mb-2">
+                                <h4 class="text-xl font-bold tracking-tight text-white group-hover:underline decoration-2 underline-offset-4">IT Support Specialist</h4>
+                                <span class="text-xs text-textMuted font-mono tracking-widest mt-1 md:mt-0">OCT 2025 - PRESENT</span>
+                            </div>
+                            <p class="text-sm font-bold text-textMuted uppercase tracking-widest mb-4">Acacia I.T. Services</p>
+                            <p class="text-sm text-gray-400 leading-relaxed max-w-2xl">Executed bulk PC deployments via ghosting/cloning, configured BIOS, static IPs, and Active Directory domains. Provided direct on-site client support.</p>
+                        </div>
+
+                        <div class="group">
+                            <div class="flex flex-col md:flex-row md:items-baseline justify-between mb-2">
+                                <h4 class="text-xl font-bold tracking-tight text-white group-hover:underline decoration-2 underline-offset-4">POS System Installer</h4>
+                                <span class="text-xs text-textMuted font-mono tracking-widest mt-1 md:mt-0">NOV 2025 - PRESENT</span>
+                            </div>
+                            <p class="text-sm font-bold text-textMuted uppercase tracking-widest mb-4">Freelance</p>
+                            <p class="text-sm text-gray-400 leading-relaxed max-w-2xl">Deployed retail POS systems ensuring seamless hardware-software integration. Configured local networks and database setups.</p>
+                        </div>
+
+                        <div class="group">
+                            <div class="flex flex-col md:flex-row md:items-baseline justify-between mb-2">
+                                <h4 class="text-xl font-bold tracking-tight text-white group-hover:underline decoration-2 underline-offset-4">Game Tester</h4>
+                                <span class="text-xs text-textMuted font-mono tracking-widest mt-1 md:mt-0">JAN 2025 - PRESENT</span>
+                            </div>
+                            <p class="text-sm font-bold text-textMuted uppercase tracking-widest mb-4">Lionbridge</p>
+                            <p class="text-sm text-gray-400 leading-relaxed max-w-2xl">Executed functional testing and reported bugs using JIRA. Collaborated directly with dev teams to reproduce and verify fixes.</p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="py-32 text-center border-t border-white/10 reveal relative">
+            
+            <h2 class="text-5xl md:text-8xl font-black tracking-tighter mb-10">Let's talk.</h2>
+            
+            <div class="flex justify-center mb-20">
+                <div class="magnetic-wrap hover-target hover-sound click-sound">
+                    <a href="mailto:aoom5961@gmail.com" class="magnetic-btn px-8 py-4 bg-white text-black rounded-full font-bold uppercase tracking-widest text-sm hover:scale-105 transition-transform inline-block">
+                        aoom5961@gmail.com
+                    </a>
+                </div>
+            </div>
+
+            <p class="text-xs text-textMuted font-mono uppercase tracking-widest">© 2026 Naphatsadon. All rights reserved.</p>
+        </footer>
 
     </main>
 
-    <div class="fixed bottom-0 w-full h-12 md:h-10 status-bar z-50 flex justify-between items-center text-secondary select-none text-[10px] md:text-xs shadow-[0_-5px_20px_rgba(0,0,0,0.5)]">
-        
-        <div class="hidden md:flex h-full">
-            <div class="status-item bg-blue-600/20 text-blue-400 hover:bg-blue-600/40 transition-colors">
-                <i class="fas fa-code-branch mr-2"></i> main*
-            </div>
-            <div class="status-item border-r border-white/10">
-                <i class="far fa-circle-xmark mr-2 text-green-400 animate-pulse"></i> All Systems Go
-            </div>
-        </div>
-
-        <div class="flex h-full w-full md:w-auto overflow-x-auto no-scrollbar md:overflow-visible">
-            <div class="flex min-w-full md:min-w-0 px-2 md:px-0">
-                <a href="#home" class="status-item hover:text-white transition-colors whitespace-nowrap" id="nav-home">HOME</a>
-                <a href="#projects" class="status-item hover:text-white transition-colors whitespace-nowrap" id="nav-projects">PROJECTS</a>
-                <a href="#modules" class="status-item hover:text-white transition-colors whitespace-nowrap" id="nav-modules">SKILLS</a>
-                <a href="#certificates" class="status-item hover:text-white transition-colors whitespace-nowrap" id="nav-certificates">CERTS</a>
-                <a href="#journey" class="status-item hover:text-white transition-colors whitespace-nowrap" id="nav-journey">LOG</a>
-                <a href="mailto:aoom5961@gmail.com" class="status-item hover:text-white transition-colors text-white font-bold bg-white/10 whitespace-nowrap sticky right-0">CONTACT</a>
-            </div>
-        </div>
-
-        <div class="hidden md:flex h-full">
-            <div class="status-item border-l border-white/10 font-bold" id="clock">
-                --:--:--
-            </div>
-            <div class="status-item bg-white/10 text-white hover:bg-white/20 transition-colors">
-                <span id="scroll-percent">Ln 1, Col 1</span>
-            </div>
-            <div class="status-item bg-accent text-black hover:bg-white font-bold transition-colors">
-                UTF-8
-            </div>
-        </div>
-    </div>
-
     <script>
-        // Spotlight Effect Smoothness
-        let currentX = window.innerWidth / 2;
-        let currentY = window.innerHeight / 2;
-        let targetX = currentX;
-        let targetY = currentY;
+        // --- 0. UI Sound Effects (Web Audio API) ---
+        // ไม่ต้องใช้ไฟล์เสียง สร้างจากโค้ดเลย โคตรคูล!
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
 
-        document.addEventListener('mousemove', e => {
-            targetX = e.clientX;
-            targetY = e.clientY;
-        });
-
-        function animateSpotlight() {
-            currentX += (targetX - currentX) * 0.1;
-            currentY += (targetY - currentY) * 0.1;
-            const spotlight = document.getElementById('spotlight');
-            spotlight.style.setProperty('--x', `${currentX}px`);
-            spotlight.style.setProperty('--y', `${currentY}px`);
-            requestAnimationFrame(animateSpotlight);
-        }
-        animateSpotlight();
-
-        // Live Clock
-        function updateTime() {
-            const now = new Date();
-            document.getElementById('clock').innerText = now.toLocaleTimeString();
-        }
-        setInterval(updateTime, 1000);
-        updateTime();
-
-        // Typewriter Effect for Terminal Text
-        const textToType = [
-            "> Initializing user: Naphatsadon Prasakha",
-            "> Role: Game Tester & Full Stack Dev",
-            "> Location: Bangkok, Thailand",
-            "> Status: Ready for collaboration..."
-        ];
-        
-        let typeIndex = 0;
-        let charIndex = 0;
-        const typeElem = document.getElementById('typewriter');
-
-        function typeWriter() {
-            if (typeIndex < textToType.length) {
-                if (charIndex < textToType[typeIndex].length) {
-                    // Handle color highlighting logic
-                    let currentLine = textToType[typeIndex];
-                    let displayHtml = '';
-                    
-                    // Basic syntax highlighting simulation
-                    for(let i=0; i<=charIndex; i++) {
-                        displayHtml += currentLine.charAt(i);
-                    }
-                    
-                    // Simple replacement for colors after line is fully typed or while typing
-                    displayHtml = displayHtml.replace('Naphatsadon Prasakha', '<strong class="text-white">Naphatsadon Prasakha</strong>')
-                                             .replace('Game Tester', '<span class="text-white">Game Tester</span>')
-                                             .replace('Full Stack Dev', '<span class="text-white">Full Stack Dev</span>')
-                                             .replace('Bangkok, Thailand', '<span class="text-white">Bangkok, Thailand</span>')
-                                             .replace('Ready for collaboration...', '<span class="text-success">Ready for collaboration...</span>');
-                    
-                    // Add previous lines
-                    let fullHtml = '';
-                    for(let i=0; i<typeIndex; i++) {
-                        let prevLine = textToType[i]
-                            .replace('Naphatsadon Prasakha', '<strong class="text-white">Naphatsadon Prasakha</strong>')
-                            .replace('Game Tester', '<span class="text-white">Game Tester</span>')
-                            .replace('Full Stack Dev', '<span class="text-white">Full Stack Dev</span>')
-                            .replace('Bangkok, Thailand', '<span class="text-white">Bangkok, Thailand</span>');
-                        fullHtml += prevLine + '<br>';
-                    }
-                    
-                    typeElem.innerHTML = fullHtml + displayHtml;
-                    charIndex++;
-                    setTimeout(typeWriter, 30); // Typing speed
-                } else {
-                    typeIndex++;
-                    charIndex = 0;
-                    if(typeIndex < textToType.length) {
-                        typeElem.innerHTML += '<br>';
-                    }
-                    setTimeout(typeWriter, 400); // Delay between lines
-                }
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new AudioContext();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
             }
         }
+
+        // เสียง "ติ๊ก" เบาๆ เวลากวาดเมาส์ผ่าน (Hover)
+        function playHoverSound() {
+            if (!audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(600, audioCtx.currentTime); // Pitch
+            osc.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.05);
+            
+            gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime); // ความดัง (เบามาก)
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+            
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.05);
+        }
+
+        // เสียง "ตุ๊บ" นุ่มๆ เวลากดปุ่ม (Click)
+        function playClickSound() {
+            if (!audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.1);
+            
+            gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime); // ดังกว่า Hover นิดนึง
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+            
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.1);
+        }
+
+        // ผูก Event เสียงเข้ากับปุ่ม (ผู้ใช้ต้องคลิกหน้าเว็บก่อน 1 ครั้ง Browser ถึงจะยอมให้เล่นเสียง)
+        document.body.addEventListener('click', initAudio, { once: true });
         
-        // Start typewriter after brief delay
-        setTimeout(typeWriter, 1000);
+        document.querySelectorAll('.hover-sound').forEach(el => {
+            el.addEventListener('mouseenter', () => { if(audioCtx) playHoverSound(); });
+        });
+        document.querySelectorAll('.click-sound').forEach(el => {
+            el.addEventListener('click', () => { if(audioCtx) playClickSound(); });
+        });
 
-        // Scroll Percentage & Reveal Elements
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.15
-        };
+        // --- 1. Initialize Lenis (Smooth Scrolling Library) ---
+        const lenis = new Lenis({
+            duration: 1.5,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            smoothWheel: true,
+        });
 
+        lenis.stop(); // หยุดเลื่อนตอนโหลด Splash Screen
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        // --- 2. Splash Screen (Shutter Effect) ---
+        window.addEventListener('DOMContentLoaded', () => {
+            const splashText = document.getElementById('splash-text');
+            const panelLeft = document.getElementById('panel-left');
+            const panelRight = document.getElementById('panel-right');
+
+            setTimeout(() => {
+                splashText.style.opacity = '0';
+            }, 800);
+
+            setTimeout(() => {
+                panelLeft.style.transform = 'scaleX(0)';
+                panelRight.style.transform = 'scaleX(0)';
+                lenis.start(); // ปลดล็อคหน้าจอ
+                
+                setTimeout(() => {
+                    document.getElementById('splash-screen').style.display = 'none';
+                    document.querySelectorAll('.hero-reveal').forEach(el => el.classList.add('is-visible'));
+                }, 800);
+            }, 1200);
+        });
+
+        // --- 3. Mobile Menu Toggle ---
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+        let isMenuOpen = false;
+
+        menuToggle.addEventListener('click', () => {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                mobileMenu.classList.add('active');
+                menuToggle.innerHTML = '<i class="fas fa-times text-xl"></i>';
+                lenis.stop(); // ล็อคหน้าจอไม่ให้เลื่อนตอนเปิดเมนู
+            } else {
+                mobileMenu.classList.remove('active');
+                menuToggle.innerHTML = '<i class="fas fa-bars text-xl"></i>';
+                lenis.start();
+            }
+        });
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+                menuToggle.innerHTML = '<i class="fas fa-bars text-xl"></i>';
+                isMenuOpen = false;
+                lenis.start();
+            });
+        });
+
+        // --- 4. Anchor Links Smooth Jump ---
+        document.querySelectorAll('a.smooth-link').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                lenis.scrollTo(targetId, {
+                    offset: -100,
+                    duration: 1.5,
+                    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+                });
+            });
+        });
+
+        // --- 5. Custom Cursor Logic ---
+        const cursorDot = document.getElementById('cursor-dot');
+        const cursorOutline = document.getElementById('cursor-outline');
+        let cursorX = window.innerWidth / 2, cursorY = window.innerHeight / 2;
+        let outlineX = cursorX, outlineY = cursorY;
+
+        // เช็คว่าเป็นอุปกรณ์มีเมาส์ไหม ถ้ามีค่อยรันโค้ดเคอร์เซอร์
+        if (window.matchMedia("(pointer: fine)").matches) {
+            window.addEventListener('mousemove', (e) => {
+                cursorX = e.clientX;
+                cursorY = e.clientY;
+                cursorDot.style.left = `${cursorX}px`;
+                cursorDot.style.top = `${cursorY}px`;
+            });
+
+            function animateCursor() {
+                outlineX += (cursorX - outlineX) * 0.15;
+                outlineY += (cursorY - outlineY) * 0.15;
+                cursorOutline.style.left = `${outlineX}px`;
+                cursorOutline.style.top = `${outlineY}px`;
+                requestAnimationFrame(animateCursor);
+            }
+            animateCursor();
+
+            document.querySelectorAll('.hover-target').forEach(el => {
+                el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+                el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+            });
+        }
+
+        // --- 6. Magnetic Button Logic ---
+        document.querySelectorAll('.magnetic-wrap').forEach(wrap => {
+            const btn = wrap.querySelector('.magnetic-btn');
+            wrap.addEventListener('mousemove', (e) => {
+                const rect = wrap.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                btn.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+            });
+            wrap.addEventListener('mouseleave', () => {
+                btn.style.transform = `translate(0px, 0px)`;
+            });
+        });
+
+        // --- 7. Sticky Story Sequence ---
+        const storySection = document.getElementById('story-section');
+        const steps = [
+            document.getElementById('step-1'), document.getElementById('step-2'),
+            document.getElementById('step-3'), document.getElementById('step-4')
+        ];
+
+        lenis.on('scroll', (e) => {
+            if(!storySection) return;
+            const rect = storySection.getBoundingClientRect();
+            const sectionTop = rect.top;
+            const sectionHeight = rect.height - window.innerHeight; 
+            
+            if (sectionTop <= 0 && sectionTop >= -sectionHeight) {
+                const progress = Math.abs(sectionTop) / sectionHeight;
+                const currentStepIndex = Math.min(Math.floor(progress * steps.length), steps.length - 1);
+
+                steps.forEach((step, index) => {
+                    if (index === currentStepIndex) {
+                        step.classList.add('is-active'); step.classList.remove('is-past');
+                    } else if (index < currentStepIndex) {
+                        step.classList.remove('is-active'); step.classList.add('is-past');
+                    } else {
+                        step.classList.remove('is-active'); step.classList.remove('is-past');
+                    }
+                });
+            } else if (sectionTop > 0) {
+                steps.forEach(step => step.classList.remove('is-active', 'is-past'));
+            } else {
+                steps.forEach(step => { step.classList.remove('is-active'); step.classList.add('is-past'); });
+            }
+        });
+
+        // --- 8. Normal Scroll Reveal ---
+        const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
         const observer = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('active');
-                    // Optional: stop observing once revealed
-                    // observer.unobserve(entry.target); 
                 }
             });
         }, observerOptions);
 
-        document.querySelectorAll('.reveal').forEach(el => {
-            observer.observe(el);
-        });
-
-        window.addEventListener('scroll', () => {
-            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-            const scrollPos = window.scrollY;
-            const percentage = docHeight > 0 ? Math.floor((scrollPos / docHeight) * 100) : 0;
-            
-            // Highlight Nav
-            const sections = ['home', 'projects', 'modules', 'certificates', 'journey'];
-            sections.forEach(sec => {
-                const element = document.getElementById(sec);
-                if (element) {
-                    const rect = element.getBoundingClientRect();
-                    const navItem = document.getElementById(`nav-${sec}`);
-                    if (navItem) {
-                        if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
-                            navItem.classList.add('active');
-                        } else {
-                            navItem.classList.remove('active');
-                        }
-                    }
-                }
-            });
-
-            const scrollElem = document.getElementById('scroll-percent');
-            if(scrollElem) scrollElem.innerText = `Ln ${percentage}, Col 1`;
-        });
-        
-        // Anti-Copy / Anti-Inspect Script
-        document.addEventListener('contextmenu', event => event.preventDefault());
-        
-        document.onkeydown = function(e) {
-            if(e.keyCode == 123) return false;
-            if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false;
-            if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) return false;
-            if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
-        }
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     </script>
 </body>
 </html>
