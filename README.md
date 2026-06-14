@@ -1,3 +1,5 @@
+### Tech
+
 <p align="left">
   <a href="https://skillicons.dev">
     <img src="https://skillicons.dev/icons?i=cs,java,py,js,ts,react,nextjs,tailwind,nodejs,fastapi,docker,git,vscode&theme=dark" />
@@ -6,7 +8,7 @@
 
 ---
 
-### 🔗 Connect with Me
+### Connect with Me
 
 <p align="left">
   <a href="mailto:aoom5961@gmail.com">
